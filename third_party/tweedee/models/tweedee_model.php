@@ -22,6 +22,14 @@ class Tweedee_model extends CI_Model {
 	 * @var		object
 	 */
 	private $_ee;
+
+	/**
+	 * Base module URL, used for all CP links.
+	 *
+	 * @access	private
+	 * @var		string
+	 */
+	private $_module_base_url;
 	
 	/**
 	 * Package name.
@@ -77,6 +85,26 @@ class Tweedee_model extends CI_Model {
 		$this->_package_name	= $package_name ? $package_name : 'tweedee';
 		$this->_package_title	= 'Tweedee';
 		$this->_package_version	= $package_version ? $package_version : '0.1.0';
+	}
+
+
+	/**
+	 * Returns the 'base URL' for all module CP links.
+	 *
+	 * @access	public
+	 * @return	string
+	 */
+	public function get_module_base_url()
+	{
+		if ( ! $this->_module_base_url)
+		{
+			$this->_module_base_url = BASE .AMP .'C=addons_modules'
+				.AMP .'M=show_module_cp' .AMP .'module='
+				.strtolower($this->get_package_name())
+				.AMP .'method=';
+		}
+
+		return $this->_module_base_url;
 	}
 	
 	

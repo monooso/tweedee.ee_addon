@@ -18,13 +18,16 @@ $lang = array(
 /* --------------------------------------------------------------
  * CONTROL PANEL
  * ------------------------------------------------------------ */
+'hd_search_criteria'			=> 'Tweedee Search Criteria',
 'hd_search_results'				=> 'Tweedee Search Results',
-'hd_search_settings'			=> 'Tweedee Search Settings',
 
-'lbl_save_settings'				=> 'Save Search Settings',
+'lbl_save_search_criteria'		=> 'Save Search Criteria',
 
+'msg_search_criteria_not_saved'	=> 'Unable to save search criteria.',
+'msg_search_criteria_saved'		=> 'Search criteria saved.',
+
+'nav_search_criteria'			=> 'Search Criteria',
 'nav_search_results'			=> 'Search Results',
-'nav_search_settings'			=> 'Search Settings',
 
 // All done.
 '' => ''

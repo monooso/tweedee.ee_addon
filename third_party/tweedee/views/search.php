@@ -33,7 +33,7 @@
 <?php
 	
 	echo '<div class="submit_wrapper">';
-	echo form_submit(array('name' => 'submit', 'value' => lang('lbl_save_settings'), 'class' => 'submit'));
+	echo form_submit(array('name' => 'submit', 'value' => lang('lbl_save_search_criteria'), 'class' => 'submit'));
 	echo '</div>';
 	echo form_close();
 

@@ -56,11 +56,11 @@ class Tweedee_mcp {
 		$this->_ee->load->model('tweedee_model');
 		$this->_model = $this->_ee->tweedee_model;
 
-		$this->_base_nav_url = BASE .AMP .'C=addons_modules' .AMP .'M=show_module_cp' .AMP .'module=' .strtolower($this->_model->get_package_name()) .AMP .'method=';
+		$this->_base_nav_url = $this->_model->get_module_base_url();
 
 		// Module navigation.
 		$this->_ee->cp->set_right_nav(array(
-			'nav_search_settings'	=> $this->_base_nav_url .'search_settings',
+			'nav_search_criteria'	=> $this->_base_nav_url .'search_criteria',
 			'nav_search_results'	=> $this->_base_nav_url .'search_results'
 		));
 
@@ -77,7 +77,28 @@ class Tweedee_mcp {
 	 */
 	public function index()
 	{
-		return $this->search_settings();
+		return $this->search_criteria();
+	}
+
+
+	/**
+	 * Saves the submitted search criteria.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function save_search_criteria()
+	{
+		if ($this->_model->save_search_criteria())
+		{
+			$this->_ee->session->set_flashdata('message_success', $this->_ee->lang->line('msg_search_criteria_saved'));
+			$this->_ee->functions->redirect($this->_base_nav_url .'search_results');
+		}
+		else
+		{
+			$this->_ee->session->set_flashdata('message_failure', $this->_ee->lang->line('msg_search_criteria_not_saved'));
+			$this->_ee->functions->redirect($this->_base_nav_url .'search_criteria');
+		}
 	}
 
 
@@ -94,12 +115,12 @@ class Tweedee_mcp {
 
 
 	/**
-	 * Module 'search settings' page.
+	 * Module 'search criteria' page.
 	 *
 	 * @access	public
 	 * @return	string
 	 */
-	public function search_settings()
+	public function search_criteria()
 	{
 		// Retrieve the package theme URL.
 		$theme_url = $this->_model->get_package_theme_url();
@@ -112,7 +133,7 @@ class Tweedee_mcp {
 		$this->_ee->cp->load_package_js('cp');
 
 		// Set the page title.
-		$this->_ee->cp->set_variable('cp_page_title', $this->_ee->lang->line('hd_search_settings'));
+		$this->_ee->cp->set_variable('cp_page_title', $this->_ee->lang->line('hd_search_criteria'));
 
 		// Assemble the view variables.
 		$view_vars = array(
