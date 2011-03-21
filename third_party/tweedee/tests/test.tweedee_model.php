@@ -116,6 +116,43 @@ class Test_tweedee_model extends Testee_unit_test_case {
 		// Tests.
 		$this->_subject->install_module_register();
 	}
+
+
+	public function test__install_module_search_criteria_table__success()
+	{
+		$dbforge = $this->_get_mock('dbforge');
+
+		$columns = array(
+			'criterion_id' => array(
+				'auto_increment'	=> TRUE,
+				'constraint'		=> 10,
+				'type'				=> 'INT',
+				'unsigned'			=> TRUE
+			),
+			'site_id' => array(
+				'constraint'		=> 5,
+				'type'				=> 'INT',
+				'unsigned'			=> TRUE
+			),
+			'criterion_type' => array(
+				'constraint'		=> 32,
+				'type'				=> 'VARCHAR'
+			),
+			'criterion_value' => array(
+				'constraint'		=> 255,
+				'type'				=> 'VARCHAR'
+			)
+		);
+
+		$this->_ee->dbforge =& $dbforge;
+
+		$dbforge->expectOnce('add_field', array($columns));
+		$dbforge->expectOnce('add_key', array('criterion_id', TRUE));
+		$dbforge->expectOnce('create_table', array('tweedee_search_criteria', TRUE));
+	
+		// Run the tests.
+		$this->_subject->install_module_search_criteria_table();
+	}
 	
 		
 	
@@ -133,6 +170,11 @@ class Test_tweedee_model extends Testee_unit_test_case {
 		$this->_ee->db->expectCallCount('delete', 2);
 		$this->_ee->db->expectAt(0, 'delete', array('module_member_groups', array('module_id' => $db_module_row->module_id)));
 		$this->_ee->db->expectAt(1, 'delete', array('modules', array('module_name' => $this->_package_name)));
+
+		$dbforge			= $this->_get_mock('dbforge');
+		$this->_ee->dbforge	=& $dbforge;
+
+		$dbforge->expectOnce('drop_table', array('tweedee_search_criteria'));
 				
 		// Return values.
 		$this->_ee->db->setReturnReference('get_where', $db_module_result);

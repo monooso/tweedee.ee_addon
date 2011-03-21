@@ -152,6 +152,7 @@ class Tweedee_model extends CI_Model {
 	public function install_module()
 	{
 		$this->install_module_register();
+		$this->install_module_search_criteria_table();
 		
 		return TRUE;
 	}
@@ -172,6 +173,45 @@ class Tweedee_model extends CI_Model {
 			'module_version'		=> $this->get_package_version()
 		));
 	}
+
+
+	/**
+	 * Creates the module settings table.
+	 *
+	 * @access	public
+	 * @return	void
+	 */
+	public function install_module_search_criteria_table()
+	{
+		$this->_ee->load->dbforge();
+
+		// Table columns.
+		$columns = array(
+			'criterion_id' => array(
+				'auto_increment'	=> TRUE,
+				'constraint'		=> 10,
+				'type'				=> 'INT',
+				'unsigned'			=> TRUE
+			),
+			'site_id' => array(
+				'constraint'		=> 5,
+				'type'				=> 'INT',
+				'unsigned'			=> TRUE
+			),
+			'criterion_type' => array(
+				'constraint'		=> 32,
+				'type'				=> 'VARCHAR'
+			),
+			'criterion_value' => array(
+				'constraint'		=> 255,
+				'type'				=> 'VARCHAR'
+			)
+		);
+
+		$this->_ee->dbforge->add_field($columns);
+		$this->_ee->dbforge->add_key('criterion_id', TRUE);
+		$this->_ee->dbforge->create_table('tweedee_search_criteria', TRUE);
+	}
 	
 	
 	/**
@@ -182,6 +222,8 @@ class Tweedee_model extends CI_Model {
 	 */
 	public function uninstall_module()
 	{
+		$this->_ee->load->dbforge();
+
 		// Retrieve the module information.
 		$db_module = $this->_ee->db
 			->select('module_id')
@@ -197,6 +239,9 @@ class Tweedee_model extends CI_Model {
 		
 		// Delete the module from the modules table.
 		$this->_ee->db->delete('modules', array('module_name' => $this->get_package_name()));
+
+		// Drop the 'search criteria' table.
+		$this->_ee->dbforge->drop_table('tweedee_search_criteria');
 		
 		return TRUE;
 	}
