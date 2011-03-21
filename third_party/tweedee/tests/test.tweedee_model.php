@@ -5,7 +5,8 @@
  *
  * @author			Stephen Lewis <stephen@experienceinternet.co.uk>
  * @copyright		Experience Internet
- * @package			Tweedee */
+ * @package			Tweedee
+ */
 
 require_once PATH_THIRD .'tweedee/models/tweedee_model' .EXT;
 
@@ -76,7 +77,7 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_constructor__package_name_and_version()
+	public function test__constructor__package_name_and_version()
 	{
 		// Dummy values.
 		$package_name 		= 'Example_package';
@@ -89,7 +90,7 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_get_site_id__success()
+	public function test__get_site_id__success()
 	{
 		// Expectations.
 		$this->_ee->config->expectOnce('item', array('site_id'));
@@ -99,7 +100,7 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_install_module_register__success()
+	public function test__install_module_register__success()
 	{
 		// Dummy values.
 		$query_data = array(
@@ -118,7 +119,7 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	
 		
 	
-	public function test_uninstall_module__success()
+	public function test__uninstall_module__success()
 	{
 		// Dummy values.
 		$db_module_result 			= $this->_get_mock('db_query');
@@ -129,7 +130,7 @@ class Test_tweedee_model extends Testee_unit_test_case {
 		$this->_ee->db->expectOnce('select', array('module_id'));
 		$this->_ee->db->expectOnce('get_where', array('modules', array('module_name' => $this->_package_name), 1));
 		
-				$this->_ee->db->expectCallCount('delete', 2);
+		$this->_ee->db->expectCallCount('delete', 2);
 		$this->_ee->db->expectAt(0, 'delete', array('module_member_groups', array('module_id' => $db_module_row->module_id)));
 		$this->_ee->db->expectAt(1, 'delete', array('modules', array('module_name' => $this->_package_name)));
 				
@@ -143,7 +144,7 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_uninstall_module__module_not_found()
+	public function test__uninstall_module__module_not_found()
 	{
 		// Dummy values.
 		$db_module_result = $this->_get_mock('db_query');
@@ -162,34 +163,48 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	}
 	
 	
-	public function test_update_module__no_update_required()
+	public function test__update_module__no_update_required()
 	{
 		// Dummy values.
-		$installed_version = $this->_package_version;
+		$installed_version	= '1.0.0';
+		$package_version	= '1.0.0';
 
 		// Tests.
-		$this->assertIdentical(FALSE, $this->_subject->update_module($installed_version));
+		$this->assertIdentical(FALSE, $this->_subject->update_module($installed_version, $package_version));
 	}
 	
 	
 	
-	public function test_update_module__update_required()
+	public function test__update_module__update_required()
 	{
 		// Dummy values.
-		$installed_version = '0.9.0';
+		$installed_version	= '0.9.0';
+		$package_version	= '1.0.0';
 
 		// Tests.
-		$this->assertIdentical(TRUE, $this->_subject->update_module($installed_version));
+		$this->assertIdentical(TRUE, $this->_subject->update_module($installed_version, $package_version));
 	}
 	
 	
-	public function test_update_module__no_installed_version()
+	public function test__update_module__no_installed_version()
 	{
 		// Dummy values.
-		$installed_version = '';
+		$installed_version	= '';
+		$package_version	= '1.0.0';
 
 		// Tests.
-		$this->assertIdentical(TRUE, $this->_subject->update_module($installed_version));
+		$this->assertIdentical(TRUE, $this->_subject->update_module($installed_version, $package_version));
+	}
+	
+	
+	public function test__update_module__no_package_version()
+	{
+		// Dummy values.
+		$installed_version	= '1.0.0';
+		$package_version	= '';
+
+		// Tests.
+		$this->assertIdentical(FALSE, $this->_subject->update_module($installed_version, $package_version));
 	}
 	
 	

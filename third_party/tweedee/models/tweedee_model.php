@@ -5,7 +5,9 @@
  *
  * @author			Stephen Lewis <stephen@experienceinternet.co.uk>
  * @copyright		Experience Internet
- * @package			Tweedee * @version 		0.1.0 */
+ * @package			Tweedee
+ * @version 		0.1.0
+ */
 
 class Tweedee_model extends CI_Model {
 	
@@ -150,21 +152,9 @@ class Tweedee_model extends CI_Model {
 	public function install_module()
 	{
 		$this->install_module_register();
-		$this->install_module_actions();
 		
 		return TRUE;
 	}
-	
-	
-	/**
-	 * Register the module actions in the database.
-	 *
-	 * @access	public
-	 * @return	void
-	 */
-	public function install_module_actions()
-	{
-			}
 	
 	
 	/**
@@ -208,9 +198,6 @@ class Tweedee_model extends CI_Model {
 		// Delete the module from the modules table.
 		$this->_ee->db->delete('modules', array('module_name' => $this->get_package_name()));
 		
-		// Delete the module from the actions table.
-		$this->_ee->db->delete('actions', array('class' => $this->get_package_name()));
-		
 		return TRUE;
 	}
 	
@@ -220,11 +207,12 @@ class Tweedee_model extends CI_Model {
 	 *
 	 * @access	public
 	 * @param 	string		$installed_version		The installed version.
+	 * @param 	string		$package_version		The package version.
 	 * @return	bool
 	 */
-	public function update_module($installed_version = '')
+	public function update_module($installed_version = '', $package_version = '')
 	{
-		if (version_compare($installed_version, $this->get_package_version(), '>='))
+		if (version_compare($installed_version, $package_version, '>='))
 		{
 			return FALSE;
 		}
