@@ -240,6 +240,45 @@ class Tweedee_model extends CI_Model {
 		$this->_ee->dbforge->add_key('criterion_id', TRUE);
 		$this->_ee->dbforge->create_table('tweedee_search_criteria', TRUE);
 	}
+
+
+	/**
+	 * Saves the search criteria submitted by the user.
+	 *
+	 * @access	public
+	 * @return	bool
+	 */
+	public function save_search_criteria()
+	{
+		// Convenience.
+		$site_id = $this->get_site_id();
+
+		// Retrieve the POST data, and run it through the XSS cleaner.
+		$search_criteria = $this->_ee->input->post('search_criteria', TRUE);
+
+		// Delete all the existing search criteria for the current site.
+		$this->_ee->db->delete('tweedee_search_criteria', array('site_id' => $site_id));
+
+		// If we have no search criteria, we're done.
+		if ( ! $search_criteria OR ! is_array($search_criteria))
+		{
+			return TRUE;
+		}
+
+		// Add the new search criteria to the database.
+		foreach ($search_criteria AS $criterion)
+		{
+			$insert_data = array(
+				'criterion_type'	=> $criterion['type'],
+				'criterion_value'	=> $criterion['value'],
+				'site_id'			=> $site_id
+			);
+
+			$this->_ee->db->insert('tweedee_search_criteria', $insert_data);
+		}
+
+		return TRUE;
+	}
 	
 	
 	/**

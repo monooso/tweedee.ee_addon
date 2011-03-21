@@ -153,6 +153,40 @@ class Test_tweedee_model extends Testee_unit_test_case {
 		// Run the tests.
 		$this->_subject->install_module_search_criteria_table();
 	}
+
+
+	public function test__save_search_criteria__success()
+	{
+		$search_criteria = array(
+			array('type' => 'from', 'value' => 'monooso'),
+			array('type' => 'to', 'value' => 'mrw'),
+			array('type' => 'phrase', 'value' => 'oy')
+		);
+
+		// Retrieve the POST data.
+		$this->_ee->input->expectOnce('post', array('search_criteria', TRUE));
+		$this->_ee->input->setReturnValue('post', $search_criteria, array('search_criteria', TRUE));
+
+		// Delete the existing search criteria.
+		$this->_ee->db->expectOnce('delete', array('tweedee_search_criteria', array('site_id' => $this->_site_id)));
+
+		// Loop through the new search criteria.
+		$this->_ee->db->expectCallCount('insert', count($search_criteria));
+
+		for ($count = 0, $length = count($search_criteria); $count < $length; $count++)
+		{
+			$insert_data = array(
+				'criterion_type'	=> $search_criteria[$count]['type'],
+				'criterion_value'	=> $search_criteria[$count]['value'],
+				'site_id'			=> $this->_site_id
+			);
+
+			$this->_ee->db->expectAt($count, 'insert', array('tweedee_search_criteria', $insert_data));
+		}
+	
+		// Run the tests.
+		$this->assertIdentical(TRUE, $this->_subject->save_search_criteria());
+	}
 	
 		
 	
