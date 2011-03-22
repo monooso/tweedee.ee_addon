@@ -35,6 +35,9 @@
 		$('.tweedee_criterion').each(function(criterionCount) {
 			$select = $(this).find('select');
 			$select.attr('name' , $select.attr('name').replace(regex, '$1[' + criterionCount + ']$2'));
+
+			$input = $(this).find('input[type="text"]');
+			$input.attr('name' , $input.attr('name').replace(regex, '$1[' + criterionCount + ']$2'));
 		});
 	}
 

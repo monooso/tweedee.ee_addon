@@ -1,6 +1,6 @@
 <div id="tweedee">
 
-<form>
+<?=form_open($form_action); ?>
 	<p>Find Tweets matching the following criteria:</p>
 	
 	<div class="tweedee_criterion">

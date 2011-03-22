@@ -137,6 +137,7 @@ class Tweedee_mcp {
 
 		// Assemble the view variables.
 		$view_vars = array(
+			'form_action'	=> substr($this->_base_nav_url, strlen(BASE .AMP)) .'save_search_criteria',
 			'theme_url'		=> $theme_url
 		);
 
