@@ -243,6 +243,36 @@ class Tweedee_model extends CI_Model {
 
 
 	/**
+	 * Loads the search criteria.
+	 *
+	 * @access	public
+	 * @return	array
+	 */
+	public function load_search_criteria()
+	{
+		$db_result = $this->_ee->db->select('criterion_id, site_id, criterion_type, criterion_value')
+			->get_where('tweedee_search_criteria', array('site_id' => $this->get_site_id()));
+
+		$criteria = array();
+
+		if ( ! $db_result->num_rows())
+		{
+			return $criteria;
+		}
+
+		foreach ($db_result->result_array() AS $db_row)
+		{
+			$db_row['criterion_id'] = intval($db_row['criterion_id']);
+			$db_row['site_id']		= intval($db_row['site_id']);
+
+			$criteria[] = $db_row;
+		}
+
+		return $criteria;
+	}
+
+
+	/**
 	 * Saves the search criteria submitted by the user.
 	 *
 	 * @access	public
@@ -250,16 +280,28 @@ class Tweedee_model extends CI_Model {
 	 */
 	public function save_search_criteria()
 	{
-		// Convenience.
 		$site_id = $this->get_site_id();
 
 		// Retrieve the POST data, and run it through the XSS cleaner.
 		$search_criteria = $this->_ee->input->post('search_criteria', TRUE);
 
-		// Delete all the existing search criteria for the current site.
+		// Validate the POST data.
+		if ( ! is_array($search_criteria))
+		{
+			return FALSE;
+		}
+
+		foreach ($search_criteria AS $criterion)
+		{
+			if ( ! array_key_exists('type', $criterion) OR ! array_key_exists('value', $criterion))
+			{
+				return FALSE;
+			}
+		}
+
+		// Delete any existing criteria.
 		$this->_ee->db->delete('tweedee_search_criteria', array('site_id' => $site_id));
 
-		// If we have no search criteria, we're done.
 		if ( ! $search_criteria OR ! is_array($search_criteria))
 		{
 			return TRUE;
@@ -268,6 +310,12 @@ class Tweedee_model extends CI_Model {
 		// Add the new search criteria to the database.
 		foreach ($search_criteria AS $criterion)
 		{
+			// No point saving empty criteria.
+			if ($criterion['type'] == '' OR $criterion['value'] == '')
+			{
+				continue;
+			}
+
 			$insert_data = array(
 				'criterion_type'	=> $criterion['type'],
 				'criterion_value'	=> $criterion['value'],

@@ -3,32 +3,49 @@
 <?=form_open($form_action); ?>
 	<p>Find Tweets matching the following criteria:</p>
 	
+	<?php
+		if ($search_criteria):
+		$criterion_count = 0;
+		foreach ($search_criteria AS $search_criterion):
+	?>
 	<div class="tweedee_criterion">
 		<label>
-			<span>Search criterion type</span>
-			<select name="search_criteria[0][type]">
-				<option value="">Please select&hellip;</option>
-				<option value="from">From this person</option>
-				<option value="to">To this person</option>
-				<option value="referencing">Referencing this person</option>
-				<option value="hashtag">Using this hashtag</option>
-				<option value="ors">Containing any of these words</option>
-				<option value="ands">Containing all of these words</option>
-				<option value="phrase">Containing this exact phrase</option>
-				<option value="nots">Not containing these words</option>
-			</select>
+			<span><?=lang('lbl_search_criterion_type'); ?></span>
+			<?=form_dropdown("search_criteria[{$criterion_count}][type]", $criterion_types, $search_criterion['criterion_type']); ?>
 		</label>
 	
 		<label>
-			<span>Search criterion value</span>
-			<input name="search_criteria[0][value]" type="text" />
+			<span><?=lang('lbl_search_criterion_value'); ?></span>
+			<?=form_input("search_criteria[{$criterion_count}][value]", $search_criterion['criterion_value']); ?>
 		</label>
 
 		<div>
-			<a class="remove_criterion" href="#" title="Remove this search criterion"><img src="<?=$theme_url; ?>/img/minus.png" /></a>
-			<a class="add_criterion" href="#" title="Add a new search criterion"><img src="<?=$theme_url; ?>/img/plus.png" /></a>
+			<a class="remove_criterion" href="#" title="<?=lang('lbl_remove_criterion'); ?>"><img src="<?=$theme_url; ?>/img/minus.png" /></a>
+			<a class="add_criterion" href="#" title="<?=lang('lbl_add_criterion'); ?>"><img src="<?=$theme_url; ?>/img/plus.png" /></a>
 		</div>
 	</div><!-- /.tweedee_criterion -->
+	<?php
+		$criterion_count++;
+		endforeach;
+		else:
+	?>
+	<div class="tweedee_criterion">
+		<label>
+			<span><?=lang('lbl_search_criterion_type'); ?></span>
+			<?=form_dropdown('search_criteria[0][type]', $criterion_types); ?>
+		</label>
+	
+		<label>
+			<span><?=lang('lbl_search_criterion_value'); ?></span>
+			<?=form_input('search_criteria[0][value]', ''); ?>
+		</label>
+
+		<div>
+			<a class="remove_criterion" href="#" title="<?=lang('lbl_remove_criterion'); ?>"><img src="<?=$theme_url; ?>/img/minus.png" /></a>
+			<a class="add_criterion" href="#" title="<?=lang('lbl_add_criterion'); ?>"><img src="<?=$theme_url; ?>/img/plus.png" /></a>
+		</div>
+	</div><!-- /.tweedee_criterion -->
+	<?php endif; ?>
 
 <?php
 	

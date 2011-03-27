@@ -122,26 +122,34 @@ class Tweedee_mcp {
 	 */
 	public function search_criteria()
 	{
-		// Retrieve the package theme URL.
 		$theme_url = $this->_model->get_package_theme_url();
 
-		// Load our happy helpers.
 		$this->_ee->load->helper('form');
 
-		// Include the CSS and JS.
 		$this->_ee->cp->load_package_css('cp');
 		$this->_ee->cp->load_package_js('cp');
 
-		// Set the page title.
 		$this->_ee->cp->set_variable('cp_page_title', $this->_ee->lang->line('hd_search_criteria'));
 
-		// Assemble the view variables.
-		$view_vars = array(
-			'form_action'	=> substr($this->_base_nav_url, strlen(BASE .AMP)) .'save_search_criteria',
-			'theme_url'		=> $theme_url
+		$criterion_types = array(
+			''				=> $this->_ee->lang->line('lbl_select_criterion_type'),
+			'from'			=> $this->_ee->lang->line('lbl_criterion_from'),
+			'to'			=> $this->_ee->lang->line('lbl_criterion_to'),
+			'referencing'	=> $this->_ee->lang->line('lbl_criterion_referencing'),
+			'hashtag'		=> $this->_ee->lang->line('lbl_criterion_hashtag'),
+			'ors'			=> $this->_ee->lang->line('lbl_criterion_ors'),
+			'ands'			=> $this->_ee->lang->line('lbl_criterion_ands'),
+			'phrase'		=> $this->_ee->lang->line('lbl_criterion_phrase'),
+			'nots'			=> $this->_ee->lang->line('lbl_criterion_nots')
 		);
 
-		// Load and return the view.
+		$view_vars = array(
+			'criterion_types'	=> $criterion_types,
+			'form_action'		=> substr($this->_base_nav_url, strlen(BASE .AMP)) .'save_search_criteria',
+			'search_criteria'	=> $this->_model->load_search_criteria(),
+			'theme_url'			=> $theme_url
+		);
+
 		return $this->_ee->load->view('search', $view_vars, TRUE);
 	}
 	
