@@ -59,6 +59,92 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	}
 	
 	
+    public function test__get_search_criteria_from_post_data__success()
+    {
+        $input = $this->_ee->input;
+
+        $search_criteria = array(
+            array('type' => Tweedee_criterion::TYPE_FROM, 'value' => 'monooso'),
+            array('type' => Tweedee_criterion::TYPE_TO, 'value' => 'mrw'),
+            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+        );
+
+        $input->expectOnce('post', array('search_criteria', array()));
+        $input->setReturnValue('post', $search_criteria, array('search_criteria', array()));
+
+        $expected_result = array();
+
+        foreach ($search_criteria AS $search_criterion)
+        {
+            $expected_result[] = new Tweedee_criterion($search_criterion);
+        }
+
+        $actual_result = $this->_subject->get_search_criteria_from_post_data();
+
+        $this->assertIdentical(count($expected_result), count($actual_result));
+        for ($count = 0, $length = count($expected_result); $count < $length; $count++)
+        {
+            $this->assertIdentical($expected_result[$count], $actual_result[$count]);
+        }
+    }
+
+
+    public function test__get_search_criteria_from_post_data__missing_type()
+    {
+        $input = $this->_ee->input;
+
+        $search_criteria = array(
+            array('type' => '', 'value' => 'monooso'),
+            array('type' => Tweedee_criterion::TYPE_TO, 'value' => 'mrw'),
+            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+        );
+
+        $input->expectOnce('post', array('search_criteria', array()));
+        $input->setReturnValue('post', $search_criteria, array('search_criteria', array()));
+
+        $expected_result = array(
+            new Tweedee_criterion($search_criteria[1]),
+            new Tweedee_criterion($search_criteria[2])
+        );
+
+        $actual_result = $this->_subject->get_search_criteria_from_post_data();
+
+        $this->assertIdentical(count($expected_result), count($actual_result));
+        for ($count = 0, $length = count($expected_result); $count < $length; $count++)
+        {
+            $this->assertIdentical($expected_result[$count], $actual_result[$count]);
+        }
+    }
+	
+	
+    public function test__get_search_criteria_from_post_data__missing_value()
+    {
+        $input = $this->_ee->input;
+
+        $search_criteria = array(
+            array('type' => Tweedee_criterion::TYPE_FROM, 'value' => 'monooso'),
+            array('type' => Tweedee_criterion::TYPE_TO, 'value' => ''),
+            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+        );
+
+        $input->expectOnce('post', array('search_criteria', array()));
+        $input->setReturnValue('post', $search_criteria, array('search_criteria', array()));
+
+        $expected_result = array(
+            new Tweedee_criterion($search_criteria[0]),
+            new Tweedee_criterion($search_criteria[2])
+        );
+
+        $actual_result = $this->_subject->get_search_criteria_from_post_data();
+
+        $this->assertIdentical(count($expected_result), count($actual_result));
+        for ($count = 0, $length = count($expected_result); $count < $length; $count++)
+        {
+            $this->assertIdentical($expected_result[$count], $actual_result[$count]);
+        }
+    }
+	
+	
 	public function test__get_site_id__success()
 	{
 		// Expectations.
@@ -69,46 +155,6 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	}
 
 
-    public function xtest__get_search_criteria_from_post_data__success()
-    {
-		// Retrieve the POST data.
-		$this->_ee->input->expectOnce('post', array('search_criteria', TRUE));
-		$this->_ee->input->setReturnValue('post', $search_criteria, array('search_criteria', TRUE));
-
-		// Delete the existing search criteria.
-		$this->_ee->db->expectOnce('delete', array('tweedee_search_criteria', array('site_id' => $this->_site_id)));
-
-		// Loop through the new search criteria.
-		$count = 0;
-
-		foreach ($search_criteria AS $criterion)
-		{
-			if ($criterion['type'] == '' OR $criterion['value'] == '')
-			{
-				continue;
-			}
-
-			$insert_data = array(
-				'criterion_type'	=> $criterion['type'],
-				'criterion_value'	=> $criterion['value'],
-				'site_id'			=> $this->_site_id
-			);
-
-			$this->_ee->db->expectAt($count, 'insert', array('tweedee_search_criteria', $insert_data));
-			$count++;
-		}
-	
-		$this->_ee->db->expectCallCount('insert', $count);
-
-		// Run the tests.
-		$this->assertIdentical(TRUE, $this->_subject->save_search_criteria());
-        
-    
-        // Run the tests.
-        $this->_subject->get_search_criteria_from_post_data();
-    }
-	
-	
 	public function test__install_module_register__success()
 	{
 		// Dummy values.

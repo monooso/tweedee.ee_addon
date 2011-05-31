@@ -99,6 +99,35 @@ class Tweedee_model extends CI_Model {
 	}
 	
 	
+    /**
+     * Retrieves the search criteria from the POST data.
+     *
+     * @access  public
+     * @return  array
+     */
+    public function get_search_criteria_from_post_data()
+    {
+        $input_criteria = $this->_ee->input->post('search_criteria', array());
+        $return_criteria = array();
+
+        foreach ($input_criteria AS $input_criterion)
+        {
+            if ( ! is_array($input_criterion)
+                OR ! array_key_exists('type', $input_criterion)
+                OR ! array_key_exists('value', $input_criterion)
+                OR ! $input_criterion['type']
+                OR ! $input_criterion['value'])
+            {
+                continue;
+            }
+
+            $return_criteria[] = new Tweedee_criterion($input_criterion);
+        }
+
+        return $return_criteria;
+    }
+
+
 	/**
 	 * Returns the package version.
 	 *
@@ -224,33 +253,6 @@ class Tweedee_model extends CI_Model {
 
 		return $criteria;
 	}
-
-
-    /**
-     * Retrieves the search criteria from the POST data.
-     *
-     * @access  public
-     * @return  array
-     */
-    public function get_search_criteria_from_post_data()
-    {
-		// Retrieve the POST data, and run it through the XSS cleaner.
-		$search_criteria = $this->_ee->input->post('search_criteria', TRUE);
-
-		// Validate the POST data.
-		if ( ! is_array($search_criteria))
-		{
-			return FALSE;
-		}
-
-		foreach ($search_criteria AS $criterion)
-		{
-			if ( ! array_key_exists('type', $criterion) OR ! array_key_exists('value', $criterion))
-			{
-				return FALSE;
-			}
-		}
-    }
 
 
 	/**
