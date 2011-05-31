@@ -21,7 +21,6 @@ class Tweedee_model extends CI_Model {
 	private $_site_id;
 	
 	
-	
 	/* --------------------------------------------------------------
 	 * PUBLIC METHODS
 	 * ------------------------------------------------------------ */
@@ -45,26 +44,18 @@ class Tweedee_model extends CI_Model {
 	}
 
 
-	/**
-	 * Returns the 'base URL' for all module CP links.
-	 *
-	 * @access	public
-	 * @return	string
-	 */
-	public function get_module_base_url()
-	{
-		if ( ! $this->_module_base_url)
-		{
-			$this->_module_base_url = BASE .AMP .'C=addons_modules'
-				.AMP .'M=show_module_cp' .AMP .'module='
-				.strtolower($this->get_package_name())
-				.AMP .'method=';
-		}
+    /**
+     * Returns the 'base' query string for all module URLs.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function get_module_base_querystring()
+    {
+        return 'C=addons_modules' .AMP .'M=show_module_cp' .AMP .'module=' .$this->get_package_name();
+    }
 
-		return $this->_module_base_url;
-	}
-	
-	
+
 	/**
 	 * Returns the package name.
 	 *

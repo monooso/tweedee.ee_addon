@@ -34,7 +34,7 @@ class Tweedee_mcp {
 		$this->_model = $this->_ee->tweedee_model;
 
         // Basic stuff required by every view.
-        $this->_base_qs     = 'C=addons_modules' .AMP .'M=show_module_cp' .AMP .'module=' .$this->_model->get_package_name();
+        $this->_base_qs     = $this->_model->get_module_base_querystring();
         $this->_base_url    = BASE .AMP .$this->_base_qs;
         $this->_theme_url   = $this->_model->get_package_theme_url();
 
@@ -80,12 +80,12 @@ class Tweedee_mcp {
 		if ($this->_model->save_search_criteria())
 		{
 			$this->_ee->session->set_flashdata('message_success', $this->_ee->lang->line('msg_search_criteria_saved'));
-			$this->_ee->functions->redirect($this->_base_url .AMP .'search_results');
+			$this->_ee->functions->redirect($this->_base_url .AMP .'method=search_results');
 		}
 		else
 		{
 			$this->_ee->session->set_flashdata('message_failure', $this->_ee->lang->line('msg_search_criteria_not_saved'));
-			$this->_ee->functions->redirect($this->_base_url .AMP .'search_criteria');
+			$this->_ee->functions->redirect($this->_base_url .AMP .'method=search_criteria');
 		}
 	}
 

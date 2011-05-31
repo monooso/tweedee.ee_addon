@@ -13,34 +13,9 @@ require_once PATH_THIRD .'tweedee/tests/mocks/mock.tweedee_model' .EXT;
 
 class Test_tweedee_cp extends Testee_unit_test_case {
 	
-	/* --------------------------------------------------------------
-	 * PRIVATE PROPERTIES
-	 * ------------------------------------------------------------ */
-	
-	/**
-	 * Model.
-	 *
-	 * @access	private
-	 * @var		object
-	 */
+    private $_base_qs;
 	private $_model;
-
-	/**
-	 * Module base URL.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
-	private $_module_base_url;
-	
-	/**
-	 * The test subject.
-	 *
-	 * @access	private
-	 * @var		object
-	 */
 	private $_subject;
-	
 	
 	
 	/* --------------------------------------------------------------
@@ -63,10 +38,10 @@ class Test_tweedee_cp extends Testee_unit_test_case {
 		$this->_ee->tweedee_model	=& $this->_model;
 
 		// Called from the constructor.
-		$this->_module_base_url = 'base/';
-		$this->_model->setReturnValue('get_module_base_url', $this->_module_base_url);
+		$this->_base_qs = 'base';
+        $this->_base_url = BASE .AMP .$this->_base_qs;
+		$this->_model->setReturnValue('get_module_base_querystring', $this->_base_qs);
 
-		// The test subject.
 		$this->_subject = new Tweedee_mcp();
 	}
 
@@ -79,9 +54,8 @@ class Test_tweedee_cp extends Testee_unit_test_case {
 		$message = 'saved';
 		$this->_ee->lang->setReturnValue('line', $message, array('msg_search_criteria_saved'));
 		$this->_ee->session->expectOnce('set_flashdata', array('message_success', $message));
-		$this->_ee->functions->expectOnce('redirect', array($this->_module_base_url .'search_results'));
+		$this->_ee->functions->expectOnce('redirect', array($this->_base_url .AMP .'method=search_results'));
 	
-		// Run the tests.
 		$this->_subject->save_search_criteria();
 	}
 	
@@ -94,9 +68,8 @@ class Test_tweedee_cp extends Testee_unit_test_case {
 		$message = 'not saved';
 		$this->_ee->lang->setReturnValue('line', $message, array('msg_search_criteria_not_saved'));
 		$this->_ee->session->expectOnce('set_flashdata', array('message_failure', $message));
-		$this->_ee->functions->expectOnce('redirect', array($this->_module_base_url .'search_criteria'));
+		$this->_ee->functions->expectOnce('redirect', array($this->_base_url .AMP .'method=search_criteria'));
 	
-		// Run the tests.
 		$this->_subject->save_search_criteria();
 	}
 	
