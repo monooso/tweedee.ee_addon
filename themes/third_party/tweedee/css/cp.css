@@ -1,0 +1,45 @@
+/**
+ * Tweedee control panel styles.
+ * 
+ * @author			Stephen Lewis (http://github.com/experience/)
+ * @copyright		Experience Internet
+ * @package			Tweedee
+ */
+
+@media screen {
+
+/* =act
+ * ------------------------------------------------------------ */
+#tweedee .act {
+    padding-right       : 7px;
+    text-align          : right;
+    white-space         : nowrap;
+    width               : 44px;
+}
+
+
+/* =btn
+ * ------------------------------------------------------------ */
+#tweedee .btn {
+	display				: inline-block;
+	margin-right		: 3px;
+	vertical-align		: middle;
+}
+
+#tweedee .btn img {
+	display				: inline-block;
+	vertical-align		: middle;
+}
+
+
+/* =input
+ * ------------------------------------------------------------ */
+#tweedee input[type='text'],
+#tweedee select {
+    width               : 97%;
+}
+
+} /* @media screen */
+
+/* End of file		: cp.css */
+/* File location	: themes/third_party/tweedee/css/cp.css */

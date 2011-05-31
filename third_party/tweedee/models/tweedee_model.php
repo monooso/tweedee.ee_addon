@@ -3,11 +3,13 @@
 /**
  * Tweedee model.
  *
- * @author			Stephen Lewis <stephen@experienceinternet.co.uk>
+ * @author			Stephen Lewis (http://github.com/experience/)
  * @copyright		Experience Internet
  * @package			Tweedee
  * @version 		0.1.0
  */
+
+require_once PATH_THIRD .'tweedee/classes/tweedee_criterion' .EXT;
 
 class Tweedee_model extends CI_Model {
 	
@@ -17,7 +19,6 @@ class Tweedee_model extends CI_Model {
 	private $_package_theme_url;
 	private $_package_version;
 	private $_site_id;
-	
 	
 	
 	/* --------------------------------------------------------------
@@ -43,26 +44,18 @@ class Tweedee_model extends CI_Model {
 	}
 
 
-	/**
-	 * Returns the 'base URL' for all module CP links.
-	 *
-	 * @access	public
-	 * @return	string
-	 */
-	public function get_module_base_url()
-	{
-		if ( ! $this->_module_base_url)
-		{
-			$this->_module_base_url = BASE .AMP .'C=addons_modules'
-				.AMP .'M=show_module_cp' .AMP .'module='
-				.strtolower($this->get_package_name())
-				.AMP .'method=';
-		}
+    /**
+     * Returns the 'base' query string for all module URLs.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function get_module_base_querystring()
+    {
+        return 'C=addons_modules' .AMP .'M=show_module_cp' .AMP .'module=' .$this->get_package_name();
+    }
 
-		return $this->_module_base_url;
-	}
-	
-	
+
 	/**
 	 * Returns the package name.
 	 *
@@ -97,6 +90,35 @@ class Tweedee_model extends CI_Model {
 	}
 	
 	
+    /**
+     * Retrieves the search criteria from the POST data.
+     *
+     * @access  public
+     * @return  array
+     */
+    public function get_search_criteria_from_post_data()
+    {
+        $input_criteria = $this->_ee->input->post('search_criteria', array());
+        $return_criteria = array();
+
+        foreach ($input_criteria AS $input_criterion)
+        {
+            if ( ! is_array($input_criterion)
+                OR ! array_key_exists('criterion_type', $input_criterion)
+                OR ! array_key_exists('criterion_value', $input_criterion)
+                OR ! $input_criterion['criterion_value']
+                OR ! Tweedee_criterion::is_valid_criterion_type($input_criterion['criterion_type']))
+            {
+                continue;
+            }
+
+            $return_criteria[] = new Tweedee_criterion($input_criterion);
+        }
+
+        return $return_criteria;
+    }
+
+
 	/**
 	 * Returns the package version.
 	 *
@@ -205,7 +227,7 @@ class Tweedee_model extends CI_Model {
 	 */
 	public function load_search_criteria()
 	{
-		$db_result = $this->_ee->db->select('criterion_id, site_id, criterion_type, criterion_value')
+		$db_result = $this->_ee->db->select('criterion_id, criterion_type, criterion_value')
 			->get_where('tweedee_search_criteria', array('site_id' => $this->get_site_id()));
 
 		$criteria = array();
@@ -217,10 +239,7 @@ class Tweedee_model extends CI_Model {
 
 		foreach ($db_result->result_array() AS $db_row)
 		{
-			$db_row['criterion_id'] = intval($db_row['criterion_id']);
-			$db_row['site_id']		= intval($db_row['site_id']);
-
-			$criteria[] = $db_row;
+            $criteria[] = new Tweedee_criterion($db_row);
 		}
 
 		return $criteria;
@@ -231,54 +250,31 @@ class Tweedee_model extends CI_Model {
 	 * Saves the search criteria submitted by the user.
 	 *
 	 * @access	public
+     * @param   array       $criteria       An array of Tweedee_criterion objects.
 	 * @return	bool
 	 */
-	public function save_search_criteria()
+	public function save_search_criteria(Array $criteria = array())
 	{
+        // Validate the search criteria.
+        foreach ($criteria AS $criterion)
+        {
+            if ( ! $criterion instanceof Tweedee_criterion
+                OR ! $criterion->get_criterion_type()
+                OR ! $criterion->get_criterion_value())
+            {
+                return FALSE;
+            }
+        }
+
 		$site_id = $this->get_site_id();
+        $this->_ee->db->delete('tweedee_search_criteria', array('site_id' => $site_id));
+        $base_insert_data = array('site_id' => $site_id);
 
-		// Retrieve the POST data, and run it through the XSS cleaner.
-		$search_criteria = $this->_ee->input->post('search_criteria', TRUE);
-
-		// Validate the POST data.
-		if ( ! is_array($search_criteria))
-		{
-			return FALSE;
-		}
-
-		foreach ($search_criteria AS $criterion)
-		{
-			if ( ! array_key_exists('type', $criterion) OR ! array_key_exists('value', $criterion))
-			{
-				return FALSE;
-			}
-		}
-
-		// Delete any existing criteria.
-		$this->_ee->db->delete('tweedee_search_criteria', array('site_id' => $site_id));
-
-		if ( ! $search_criteria OR ! is_array($search_criteria))
-		{
-			return TRUE;
-		}
-
-		// Add the new search criteria to the database.
-		foreach ($search_criteria AS $criterion)
-		{
-			// No point saving empty criteria.
-			if ($criterion['type'] == '' OR $criterion['value'] == '')
-			{
-				continue;
-			}
-
-			$insert_data = array(
-				'criterion_type'	=> $criterion['type'],
-				'criterion_value'	=> $criterion['value'],
-				'site_id'			=> $site_id
-			);
-
-			$this->_ee->db->insert('tweedee_search_criteria', $insert_data);
-		}
+        foreach ($criteria AS $criterion)
+        {
+            $insert_data = array_merge($base_insert_data, $criterion->to_array());
+            $this->_ee->db->insert('tweedee_search_criteria', $insert_data);
+        }
 
 		return TRUE;
 	}
