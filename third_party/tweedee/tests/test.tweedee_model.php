@@ -237,9 +237,9 @@ class Test_tweedee_model extends Testee_unit_test_case {
 
         $length = count($search_criteria);
 
-        $db->expectOnce('delete', array('tweedee_search_criteria'));
+        $db->expectOnce('delete', array('tweedee_search_criteria', array('site_id' => $this->_site_id)));
         $db->expectCallCount('insert', $length);
-        $insert_data = array('site_id', $this->_site_id);
+        $insert_data = array('site_id' => $this->_site_id);
 
         for ($count = 0; $count < $length; $count++)
         {
@@ -247,26 +247,45 @@ class Test_tweedee_model extends Testee_unit_test_case {
             $criterion_data = array_merge($insert_data, $criterion->to_array());
             $db->expectAt($count, 'insert', array('tweedee_search_criteria', $criterion_data));
         }
+
+        $this->assertIdentical(TRUE, $this->_subject->save_search_criteria($search_criteria));
 	}
 
 
-	public function xtest__save_search_criteria__missing_criterion_type()
-	{
-		$search_criteria = array(array('value' => 'example'));
+    public function test__save_search_criteria__missing_criterion_value()
+    {
+        $db = $this->_ee->db;
+    
+        $search_criteria = array(
+            new Tweedee_criterion(array('criterion_value' => 'mrw')),
+            new Tweedee_criterion(),
+            new Tweedee_criterion(array('criterion_value' => 'oy vey'))
+        );
 
-		// Retrieve the POST data.
-		$this->_ee->input->setReturnValue('post', $search_criteria, array('search_criteria', TRUE));
+        $db->expectNever('delete');
+        $db->expectNever('insert');
+        
+        $this->assertIdentical(FALSE, $this->_subject->save_search_criteria($search_criteria));
+    }
 
-		// This should never happen.
-		$this->_ee->db->expectNever('delete');
-		$this->_ee->db->expectNever('insert');
-	
-		// Run the tests.
-		$this->assertIdentical(FALSE, $this->_subject->save_search_criteria());
-	}
-	
-		
-	
+
+    public function test__save_search_criteria__invalid_criterion()
+    {
+        $db = $this->_ee->db;
+    
+        $search_criteria = array(
+            new Tweedee_criterion(array('criterion_value' => 'mrw')),
+            new StdClass(),
+            new Tweedee_criterion(array('criterion_value' => 'oy vey'))
+        );
+
+        $db->expectNever('delete');
+        $db->expectNever('insert');
+        
+        $this->assertIdentical(FALSE, $this->_subject->save_search_criteria($search_criteria));
+    }
+
+
 	public function test__uninstall_module__success()
 	{
 		// Dummy values.

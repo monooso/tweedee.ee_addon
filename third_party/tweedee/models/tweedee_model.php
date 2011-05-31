@@ -226,16 +226,14 @@ class Tweedee_model extends CI_Model {
 	}
 
 
-	/**
-	 * Saves the search criteria submitted by the user.
-	 *
-	 * @access	public
-	 * @return	bool
-	 */
-	public function save_search_criteria()
-	{
-		$site_id = $this->get_site_id();
-
+    /**
+     * Retrieves the search criteria from the POST data.
+     *
+     * @access  public
+     * @return  array
+     */
+    public function get_search_criteria_from_post_data()
+    {
 		// Retrieve the POST data, and run it through the XSS cleaner.
 		$search_criteria = $this->_ee->input->post('search_criteria', TRUE);
 
@@ -252,32 +250,37 @@ class Tweedee_model extends CI_Model {
 				return FALSE;
 			}
 		}
+    }
 
-		// Delete any existing criteria.
-		$this->_ee->db->delete('tweedee_search_criteria', array('site_id' => $site_id));
 
-		if ( ! $search_criteria OR ! is_array($search_criteria))
-		{
-			return TRUE;
-		}
+	/**
+	 * Saves the search criteria submitted by the user.
+	 *
+	 * @access	public
+     * @param   array       $criteria       An array of Tweedee_criterion objects.
+	 * @return	bool
+	 */
+	public function save_search_criteria(Array $criteria = array())
+	{
+        // Validate the search criteria.
+        foreach ($criteria AS $criterion)
+        {
+            if ( ! $criterion instanceof Tweedee_criterion
+                OR ! $criterion->get_criterion_value())
+            {
+                return FALSE;
+            }
+        }
 
-		// Add the new search criteria to the database.
-		foreach ($search_criteria AS $criterion)
-		{
-			// No point saving empty criteria.
-			if ($criterion['type'] == '' OR $criterion['value'] == '')
-			{
-				continue;
-			}
+		$site_id = $this->get_site_id();
+        $this->_ee->db->delete('tweedee_search_criteria', array('site_id' => $site_id));
+        $base_insert_data = array('site_id' => $site_id);
 
-			$insert_data = array(
-				'criterion_type'	=> $criterion['type'],
-				'criterion_value'	=> $criterion['value'],
-				'site_id'			=> $site_id
-			);
-
-			$this->_ee->db->insert('tweedee_search_criteria', $insert_data);
-		}
+        foreach ($criteria AS $criterion)
+        {
+            $insert_data = array_merge($base_insert_data, $criterion->to_array());
+            $this->_ee->db->insert('tweedee_search_criteria', $insert_data);
+        }
 
 		return TRUE;
 	}
