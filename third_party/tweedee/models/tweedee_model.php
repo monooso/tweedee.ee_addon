@@ -3,7 +3,7 @@
 /**
  * Tweedee model.
  *
- * @author			Stephen Lewis <stephen@experienceinternet.co.uk>
+ * @author			Stephen Lewis (http://github.com/experience/)
  * @copyright		Experience Internet
  * @package			Tweedee
  * @version 		0.1.0
