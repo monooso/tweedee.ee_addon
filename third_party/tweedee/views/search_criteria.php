@@ -19,7 +19,7 @@
             <td><?=form_input('search_criteria[0][value]', ''); ?></td>
             <td class="act">
                 <a class="remove_row btn" href="#" title="<?=lang('lbl_remove_criterion'); ?>"><img src="<?=$theme_url; ?>/img/minus.png" /></a>
-                <a class="add_row" href="#" title="<?=lang('lbl_add_criterion'); ?>"><img src="<?=$theme_url; ?>/img/plus.png" /></a>
+                <a class="add_row btn" href="#" title="<?=lang('lbl_add_criterion'); ?>"><img src="<?=$theme_url; ?>/img/plus.png" /></a>
             </td>
         </tr>
     <?php
@@ -31,7 +31,7 @@
             <td><?=form_input('search_criteria[0][value]', $criterion->get_criterion_value()); ?></td>
             <td class="act">
                 <a class="remove_row btn" href="#" title="<?=lang('lbl_remove_criterion'); ?>"><img src="<?=$theme_url; ?>/img/minus.png" /></a>
-                <a class="add_row" href="#" title="<?=lang('lbl_add_criterion'); ?>"><img src="<?=$theme_url; ?>/img/plus.png" /></a>
+                <a class="add_row btn" href="#" title="<?=lang('lbl_add_criterion'); ?>"><img src="<?=$theme_url; ?>/img/plus.png" /></a>
             </td>
         </tr>
     <?php

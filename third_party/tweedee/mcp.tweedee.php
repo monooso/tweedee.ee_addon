@@ -10,34 +10,11 @@
 
 class Tweedee_mcp {
 
-	/* --------------------------------------------------------------
-	 * PRIVATE PROPERTIES
-	 * ------------------------------------------------------------ */
-	
-	/**
-	 * The "base" navigation URL to which method names are appended.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
-	private $_base_nav_url;
-
-	/**
-	 * ExpressionEngine object reference.
-	 *
-	 * @access	private
-	 * @var		object
-	 */
+    private $_base_qs;
+    private $_base_url;
 	private $_ee;
-	
-	/**
-	 * Model.
-	 *
-	 * @access	private
-	 * @var		object
-	 */
 	private $_model;
-	
+    private $_theme_url;
 	
 	
 	/* --------------------------------------------------------------
@@ -56,16 +33,27 @@ class Tweedee_mcp {
 		$this->_ee->load->model('tweedee_model');
 		$this->_model = $this->_ee->tweedee_model;
 
-		$this->_base_nav_url = $this->_model->get_module_base_url();
+        // Basic stuff required by every view.
+        $this->_base_qs     = 'C=addons_modules' .AMP .'M=show_module_cp' .AMP .'module=' .$this->_model->get_package_name();
+        $this->_base_url    = BASE .AMP .$this->_base_qs;
+        $this->_theme_url   = $this->_model->get_package_theme_url();
 
-		// Module navigation.
-		$this->_ee->cp->set_right_nav(array(
-			'nav_search_criteria'	=> $this->_base_nav_url .'search_criteria',
-			'nav_search_results'	=> $this->_base_nav_url .'search_results'
-		));
+        $this->_ee->load->helper('form');
+        $this->_ee->load->library('table');
 
-		// Base breadcrumb.
-		$this->_ee->cp->set_breadcrumb($this->_base_nav_url .'index', $this->_ee->lang->line('tweedee_module_name'));
+		$this->_ee->cp->set_breadcrumb($this->_base_url, $this->_ee->lang->line('tweedee_module_name'));
+		$this->_ee->cp->add_to_foot('<script type="text/javascript" src="' .$this->_theme_url .'js/libs/jquery.roland.js"></script>');
+		$this->_ee->cp->add_to_foot('<script type="text/javascript" src="' .$this->_theme_url .'js/cp.js"></script>');
+		$this->_ee->javascript->compile();
+
+		$this->_ee->cp->add_to_head('<link rel="stylesheet" type="text/css" href="' .$this->_theme_url .'css/cp.css" />');
+
+		$nav_array = array(
+			'nav_search_criteria'	=> $this->_base_url .AMP .'method=search_criteria',
+			'nav_search_results'	=> $this->_base_url .AMP .'method=search_results'
+		);
+
+		$this->_ee->cp->set_right_nav($nav_array);
 	}
 	
 	
@@ -92,12 +80,12 @@ class Tweedee_mcp {
 		if ($this->_model->save_search_criteria())
 		{
 			$this->_ee->session->set_flashdata('message_success', $this->_ee->lang->line('msg_search_criteria_saved'));
-			$this->_ee->functions->redirect($this->_base_nav_url .'search_results');
+			$this->_ee->functions->redirect($this->_base_url .AMP .'search_results');
 		}
 		else
 		{
 			$this->_ee->session->set_flashdata('message_failure', $this->_ee->lang->line('msg_search_criteria_not_saved'));
-			$this->_ee->functions->redirect($this->_base_nav_url .'search_criteria');
+			$this->_ee->functions->redirect($this->_base_url .AMP .'search_criteria');
 		}
 	}
 
@@ -122,15 +110,6 @@ class Tweedee_mcp {
 	 */
 	public function search_criteria()
 	{
-		$theme_url = $this->_model->get_package_theme_url();
-
-		$this->_ee->load->helper('form');
-
-		$this->_ee->cp->load_package_css('cp');
-		$this->_ee->cp->load_package_js('cp');
-
-		$this->_ee->cp->set_variable('cp_page_title', $this->_ee->lang->line('hd_search_criteria'));
-
 		$criterion_types = array(
 			''				=> $this->_ee->lang->line('lbl_select_criterion_type'),
 			'from'			=> $this->_ee->lang->line('lbl_criterion_from'),
@@ -144,13 +123,14 @@ class Tweedee_mcp {
 		);
 
 		$view_vars = array(
+            'cp_page_title'     => $this->_ee->lang->line('hd_search_criteria'),
 			'criterion_types'	=> $criterion_types,
-			'form_action'		=> substr($this->_base_nav_url, strlen(BASE .AMP)) .'save_search_criteria',
+            'form_action'       => $this->_base_qs .AMP .'method=save_search_criteria',
 			'search_criteria'	=> $this->_model->load_search_criteria(),
-			'theme_url'			=> $theme_url
+			'theme_url'			=> $this->_theme_url
 		);
 
-		return $this->_ee->load->view('search', $view_vars, TRUE);
+		return $this->_ee->load->view('search_criteria', $view_vars, TRUE);
 	}
 	
 }

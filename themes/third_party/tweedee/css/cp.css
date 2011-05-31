@@ -1,60 +1,45 @@
 /**
- * Tweedee CP styles.
+ * Tweedee control panel styles.
  * 
- * @author			Stephen Lewis <stephen@experienceinternet.co.uk>
+ * @author			Stephen Lewis (http://github.com/experience/)
  * @copyright		Experience Internet
  * @package			Tweedee
  */
 
-/* =submit_wrapper
+@media screen {
+
+/* =act
  * ------------------------------------------------------------ */
-.submit_wrapper {
-	padding				: 15px 0 5px;
+#tweedee .act {
+    padding-right       : 7px;
+    text-align          : right;
+    white-space         : nowrap;
+    width               : 44px;
 }
 
-/* =tweedee_criterion
+
+/* =btn
  * ------------------------------------------------------------ */
-.tweedee_criterion {
-	border-bottom		: 1px solid rgba(0, 0, 0, 0.05);
-	padding				: 5px 0;
-}
-
-.tweedee_criterion label {
+#tweedee .btn {
 	display				: inline-block;
-	margin-right		: 1%;
-	width				: 46.5%;
-}
-
-.tweedee_criterion label span {
-	left				: -9999em;
-	position			: absolute;
-	width				: 1em;
-}
-
-.tweedee_criterion div {
-	display				: inline-block;
-	text-align			: right;
-	width				: 4%;
-	white-space			: nowrap;
-}
-
-.tweedee_criterion a,
-.tweedee_criterion img {
-	display				: inline-block;
-	margin-right		: 2px;
+	margin-right		: 3px;
 	vertical-align		: middle;
 }
 
-.only_criterion a.remove_criterion {
-	display				: none;
-}
-
-.tweedee_criterion input[type='text'],
-.tweedee_criterion select {
+#tweedee .btn img {
 	display				: inline-block;
-	width				: 95%;
+	vertical-align		: middle;
 }
 
 
-/* End of file		cp.css */
-/* File location	third_party/tweedee/css/cp.css */
+/* =input
+ * ------------------------------------------------------------ */
+#tweedee input[type='text'],
+#tweedee select {
+    width               : 97%;
+}
+
+} /* @media screen */
+
+/* End of file		: cp.css */
+/* File location	: themes/third_party/tweedee/css/cp.css */
