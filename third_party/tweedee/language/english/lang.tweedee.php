@@ -32,8 +32,6 @@ $lang = array(
 'lbl_criterion_to'				=> 'To this person',
 'lbl_remove_criterion'			=> 'Remove this search criterion',
 'lbl_save_search_criteria'		=> 'Save Search Criteria',
-'lbl_search_criterion_type'		=> 'Search criterion type',
-'lbl_search_criterion_value'	=> 'Search criterion value',
 'lbl_select_criterion_type'		=> 'Please select&hellip;',
 
 'msg_search_criteria_not_saved'	=> 'Unable to save search criteria.',
@@ -41,6 +39,9 @@ $lang = array(
 
 'nav_search_criteria'			=> 'Search Criteria',
 'nav_search_results'			=> 'Search Results',
+
+'thd_search_criterion_type'		=> 'Criterion Type',
+'thd_search_criterion_value'	=> 'Criterion Value',
 
 // All done.
 '' => ''
