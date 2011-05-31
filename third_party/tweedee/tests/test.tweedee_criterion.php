@@ -39,6 +39,29 @@ class Test_tweedee_criterion extends Testee_unit_test_case {
     }
 
 
+    public function test__is_valid_criterion_type__valid()
+    {
+        $this->assertIdentical(TRUE, Tweedee_criterion::is_valid_criterion_type(Tweedee_criterion::TYPE_AND));
+        $this->assertIdentical(TRUE, Tweedee_criterion::is_valid_criterion_type(Tweedee_criterion::TYPE_FROM));
+        $this->assertIdentical(TRUE, Tweedee_criterion::is_valid_criterion_type(Tweedee_criterion::TYPE_HASHTAG));
+        $this->assertIdentical(TRUE, Tweedee_criterion::is_valid_criterion_type(Tweedee_criterion::TYPE_NOT));
+        $this->assertIdentical(TRUE, Tweedee_criterion::is_valid_criterion_type(Tweedee_criterion::TYPE_OR));
+        $this->assertIdentical(TRUE, Tweedee_criterion::is_valid_criterion_type(Tweedee_criterion::TYPE_PHRASE));
+        $this->assertIdentical(TRUE, Tweedee_criterion::is_valid_criterion_type(Tweedee_criterion::TYPE_REFERENCING));
+        $this->assertIdentical(TRUE, Tweedee_criterion::is_valid_criterion_type(Tweedee_criterion::TYPE_TO));
+    }
+
+
+    public function test__is_valid_criterion_type__invalid()
+    {
+        $this->assertIdentical(FALSE, Tweedee_criterion::is_valid_criterion_type('invalid'));
+        $this->assertIdentical(FALSE, Tweedee_criterion::is_valid_criterion_type(100));
+        $this->assertIdentical(FALSE, Tweedee_criterion::is_valid_criterion_type(FALSE));
+        $this->assertIdentical(FALSE, Tweedee_criterion::is_valid_criterion_type(array()));
+        $this->assertIdentical(FALSE, Tweedee_criterion::is_valid_criterion_type(new StdClass()));
+    }
+
+
     public function test__set_criterion_type__valid_types()
     {
         $this->assertIdentical(Tweedee_criterion::TYPE_AND, $this->_subject->set_criterion_type(Tweedee_criterion::TYPE_AND));

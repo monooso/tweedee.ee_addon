@@ -25,6 +25,25 @@ class Tweedee_criterion {
 
 
     /* --------------------------------------------------------------
+     * CLASS METHODS
+     * ------------------------------------------------------------ */
+    
+    /**
+     * Determines whether the supplied string is a valid criterion type.
+     *
+     * @access  public
+     * @param   string        $criterion_type        The criterion type to validate.
+     * @return  bool
+     */
+    public static function is_valid_criterion_type($criterion_type)
+    {
+        return in_array($criterion_type, array(
+            self::TYPE_AND, self::TYPE_FROM, self::TYPE_HASHTAG, self::TYPE_NOT,
+            self::TYPE_OR, self::TYPE_PHRASE, self::TYPE_REFERENCING, self::TYPE_TO));
+    }
+
+
+    /* --------------------------------------------------------------
      * PUBLIC METHODS
      * ------------------------------------------------------------ */
     
@@ -83,7 +102,7 @@ class Tweedee_criterion {
      */
     public function reset()
     {
-        $this->_criterion_type  = self::TYPE_AND;   // Twitter default.
+        $this->_criterion_type  = '';
         $this->_criterion_value = '';
         return $this;
     }
@@ -98,9 +117,7 @@ class Tweedee_criterion {
      */
     public function set_criterion_type($criterion_type)
     {
-        if (in_array($criterion_type, array(
-            self::TYPE_AND, self::TYPE_FROM, self::TYPE_HASHTAG, self::TYPE_NOT,
-            self::TYPE_OR, self::TYPE_PHRASE, self::TYPE_REFERENCING, self::TYPE_TO)))
+        if (self::is_valid_criterion_type($criterion_type))
         {
             $this->_criterion_type = $criterion_type;
         }
