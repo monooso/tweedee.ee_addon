@@ -143,6 +143,34 @@ class Test_tweedee_model extends Testee_unit_test_case {
             $this->assertIdentical($expected_result[$count], $actual_result[$count]);
         }
     }
+
+
+    public function test__get_search_criteria_from_post_data__invalid_type()
+    {
+        $input = $this->_ee->input;
+
+        $search_criteria = array(
+            array('type' => Tweedee_criterion::TYPE_FROM, 'value' => 'monooso'),
+            array('type' => 'invalid', 'value' => 'mrw'),
+            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+        );
+
+        $input->expectOnce('post', array('search_criteria', array()));
+        $input->setReturnValue('post', $search_criteria, array('search_criteria', array()));
+
+        $expected_result = array(
+            new Tweedee_criterion($search_criteria[0]),
+            new Tweedee_criterion($search_criteria[2])
+        );
+
+        $actual_result = $this->_subject->get_search_criteria_from_post_data();
+
+        $this->assertIdentical(count($expected_result), count($actual_result));
+        for ($count = 0, $length = count($expected_result); $count < $length; $count++)
+        {
+            $this->assertIdentical($expected_result[$count], $actual_result[$count]);
+        }
+    }
 	
 	
 	public function test__get_site_id__success()
@@ -298,14 +326,31 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	}
 
 
+    public function test__save_search_criteria__missing_criterion_type()
+    {
+        $db = $this->_ee->db;
+    
+        $search_criteria = array(
+            new Tweedee_criterion(array('criterion_type' => Tweedee_criterion::TYPE_FROM, 'criterion_value' => 'mrw')),
+            new Tweedee_criterion(array('criterion_value' => 'mrw')),
+            new Tweedee_criterion(array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey'))
+        );
+
+        $db->expectNever('delete');
+        $db->expectNever('insert');
+        
+        $this->assertIdentical(FALSE, $this->_subject->save_search_criteria($search_criteria));
+    }
+
+
     public function test__save_search_criteria__missing_criterion_value()
     {
         $db = $this->_ee->db;
     
         $search_criteria = array(
-            new Tweedee_criterion(array('criterion_value' => 'mrw')),
-            new Tweedee_criterion(),
-            new Tweedee_criterion(array('criterion_value' => 'oy vey'))
+            new Tweedee_criterion(array('criterion_type' => Tweedee_criterion::TYPE_FROM, 'criterion_value' => 'mrw')),
+            new Tweedee_criterion(array('criterion_type' => Tweedee_criterion::TYPE_FROM)),
+            new Tweedee_criterion(array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey'))
         );
 
         $db->expectNever('delete');
