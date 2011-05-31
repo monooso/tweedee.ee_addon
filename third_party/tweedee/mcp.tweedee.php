@@ -77,7 +77,7 @@ class Tweedee_mcp {
 	 */
 	public function save_search_criteria()
 	{
-		if ($this->_model->save_search_criteria())
+		if ($this->_model->save_search_criteria($this->_model->get_search_criteria_from_post_data()))
 		{
 			$this->_ee->session->set_flashdata('message_success', $this->_ee->lang->line('msg_search_criteria_saved'));
 			$this->_ee->functions->redirect($this->_base_url .AMP .'method=search_results');
@@ -110,17 +110,13 @@ class Tweedee_mcp {
 	 */
 	public function search_criteria()
 	{
-		$criterion_types = array(
-			''				=> $this->_ee->lang->line('lbl_select_criterion_type'),
-			'from'			=> $this->_ee->lang->line('lbl_criterion_from'),
-			'to'			=> $this->_ee->lang->line('lbl_criterion_to'),
-			'referencing'	=> $this->_ee->lang->line('lbl_criterion_referencing'),
-			'hashtag'		=> $this->_ee->lang->line('lbl_criterion_hashtag'),
-			'ors'			=> $this->_ee->lang->line('lbl_criterion_ors'),
-			'ands'			=> $this->_ee->lang->line('lbl_criterion_ands'),
-			'phrase'		=> $this->_ee->lang->line('lbl_criterion_phrase'),
-			'nots'			=> $this->_ee->lang->line('lbl_criterion_nots')
-		);
+        $type_ids = Tweedee_criterion::get_all_criterion_types();
+        $criterion_types = array('' => $this->_ee->lang->line('lbl_select_criterion_type'));
+
+        foreach ($type_ids AS $type_id)
+        {
+            $criterion_types[$type_id] = $this->_ee->lang->line('lbl_criterion_' .$type_id);
+        }
 
 		$view_vars = array(
             'cp_page_title'     => $this->_ee->lang->line('hd_search_criteria'),

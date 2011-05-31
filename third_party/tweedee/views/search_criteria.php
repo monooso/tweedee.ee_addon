@@ -15,8 +15,8 @@
         if ( ! $search_criteria):
     ?>
         <tr class="row">
-            <td><?=form_dropdown('search_criteria[0][type]', $criterion_types); ?></td>
-            <td><?=form_input('search_criteria[0][value]', ''); ?></td>
+            <td><?=form_dropdown('search_criteria[0][criterion_type]', $criterion_types); ?></td>
+            <td><?=form_input('search_criteria[0][criterion_value]', ''); ?></td>
             <td class="act">
                 <a class="remove_row btn" href="#" title="<?=lang('lbl_remove_criterion'); ?>"><img src="<?=$theme_url; ?>/img/minus.png" /></a>
                 <a class="add_row btn" href="#" title="<?=lang('lbl_add_criterion'); ?>"><img src="<?=$theme_url; ?>/img/plus.png" /></a>
@@ -27,8 +27,8 @@
         foreach ($search_criteria AS $criterion):
 	?>
         <tr class="row">
-            <td><?=form_dropdown('search_criteria[0][type]', $criterion_types, $criterion->get_criterion_type()); ?></td>
-            <td><?=form_input('search_criteria[0][value]', $criterion->get_criterion_value()); ?></td>
+            <td><?=form_dropdown('search_criteria[0][criterion_type]', $criterion_types, $criterion->get_criterion_type()); ?></td>
+            <td><?=form_input('search_criteria[0][criterion_value]', $criterion->get_criterion_value()); ?></td>
             <td class="act">
                 <a class="remove_row btn" href="#" title="<?=lang('lbl_remove_criterion'); ?>"><img src="<?=$theme_url; ?>/img/minus.png" /></a>
                 <a class="add_row btn" href="#" title="<?=lang('lbl_add_criterion'); ?>"><img src="<?=$theme_url; ?>/img/plus.png" /></a>

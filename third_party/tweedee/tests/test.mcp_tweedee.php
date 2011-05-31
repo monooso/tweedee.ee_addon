@@ -48,7 +48,11 @@ class Test_tweedee_cp extends Testee_unit_test_case {
 
 	public function test__save_search_criteria__success()
 	{
-		$this->_model->expectOnce('save_search_criteria');
+        $criteria = 'Search criteria';
+        $this->_model->expectOnce('get_search_criteria_from_post_data');
+        $this->_model->setReturnValue('get_search_criteria_from_post_data', $criteria);
+
+		$this->_model->expectOnce('save_search_criteria', array($criteria));
 		$this->_model->setReturnValue('save_search_criteria', TRUE);
 
 		$message = 'saved';
@@ -62,7 +66,11 @@ class Test_tweedee_cp extends Testee_unit_test_case {
 
 	public function test__save_search_criteria__failure()
 	{
-		$this->_model->expectOnce('save_search_criteria');
+        $criteria = 'Search criteria';
+        $this->_model->expectOnce('get_search_criteria_from_post_data');
+        $this->_model->setReturnValue('get_search_criteria_from_post_data', $criteria);
+
+		$this->_model->expectOnce('save_search_criteria', array($criteria));
 		$this->_model->setReturnValue('save_search_criteria', FALSE);
 
 		$message = 'not saved';

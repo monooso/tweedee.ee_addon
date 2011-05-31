@@ -15,6 +15,7 @@ class Mock_tweedee_model {
 	public function get_package_name() {}
 	public function get_package_theme_url() {}
 	public function get_package_version() {}
+    public function get_search_criteria_from_post_data() {}
 	public function get_site_id() {}
 	public function install_module() {}
 	public function install_module_register() {}

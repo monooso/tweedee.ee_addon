@@ -104,10 +104,10 @@ class Tweedee_model extends CI_Model {
         foreach ($input_criteria AS $input_criterion)
         {
             if ( ! is_array($input_criterion)
-                OR ! array_key_exists('type', $input_criterion)
-                OR ! array_key_exists('value', $input_criterion)
-                OR ! $input_criterion['value']
-                OR ! Tweedee_criterion::is_valid_criterion_type($input_criterion['type']))
+                OR ! array_key_exists('criterion_type', $input_criterion)
+                OR ! array_key_exists('criterion_value', $input_criterion)
+                OR ! $input_criterion['criterion_value']
+                OR ! Tweedee_criterion::is_valid_criterion_type($input_criterion['criterion_type']))
             {
                 continue;
             }
