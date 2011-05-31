@@ -8,11 +8,8 @@
  * @package     Tweedee
  */
 
-require_once PATH_THIRD .'tweedee/helpers/EI_number_helper' .EXT;
-
 class Tweedee_criterion {
 
-    private $_criterion_id;
     private $_criterion_type;
     private $_criterion_value;
 
@@ -55,18 +52,6 @@ class Tweedee_criterion {
 
 
     /**
-     * Returns the criterion ID.
-     *
-     * @access  public
-     * @return  int
-     */
-    public function get_criterion_id()
-    {
-        return $this->_criterion_id;
-    }
-
-
-    /**
      * Returns the criterion type.
      *
      * @access  public
@@ -98,31 +83,12 @@ class Tweedee_criterion {
      */
     public function reset()
     {
-        $this->_criterion_id    = 0;
         $this->_criterion_type  = self::TYPE_AND;   // Twitter default.
         $this->_criterion_value = '';
-
         return $this;
     }
     
     
-    /**
-     * Sets the criterion ID.
-     *
-     * @access  public
-     * @param   int|string      $criterion_id        The criterion ID.
-     * @return  int
-     */
-    public function set_criterion_id($criterion_id)
-    {
-        if (valid_int($criterion_id, 1))
-        {
-            $this->_criterion_id = intval($criterion_id);
-        }
-        return $this->get_criterion_id();
-    }
-
-
     /**
      * Sets the criterion type.
      *
@@ -179,7 +145,6 @@ class Tweedee_criterion {
     public function to_array()
     {
         return array(
-            'criterion_id'      => $this->get_criterion_id(),
             'criterion_type'    => $this->get_criterion_type(),
             'criterion_value'   => $this->get_criterion_value()
         );

@@ -31,27 +31,11 @@ class Test_tweedee_criterion extends Testee_unit_test_case {
         parent::setUp();
 
         $this->_props = array(
-            'criterion_id'      => 10,
             'criterion_type'    => Tweedee_criterion::TYPE_HASHTAG,
             'criterion_value'   => 'eecms'
         );
 
         $this->_subject = new Tweedee_criterion($this->_props);
-    }
-
-
-    public function test__set_criterion_id__convert_to_integer()
-    {
-        $this->assertIdentical(99, $this->_subject->set_criterion_id('99'));
-    }
-
-
-    public function test__set_criterion_id__invalid_values()
-    {
-        $this->assertIdentical($this->_props['criterion_id'], $this->_subject->set_criterion_id(0));
-        $this->assertIdentical($this->_props['criterion_id'], $this->_subject->set_criterion_id('NAN'));
-        $this->assertIdentical($this->_props['criterion_id'], $this->_subject->set_criterion_id(new StdClass()));
-        $this->assertIdentical($this->_props['criterion_id'], $this->_subject->set_criterion_id(FALSE));
     }
 
 
