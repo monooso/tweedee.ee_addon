@@ -11,56 +11,11 @@
 
 class Tweedee_model extends CI_Model {
 	
-	/* --------------------------------------------------------------
-	 * PRIVATE PROPERTIES
-	 * ------------------------------------------------------------ */
-
-	/**
-	 * ExpressionEngine object reference.
-	 *
-	 * @access	private
-	 * @var		object
-	 */
 	private $_ee;
-
-	/**
-	 * Base module URL, used for all CP links.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
 	private $_module_base_url;
-	
-	/**
-	 * Package name.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
 	private $_package_name;
-
-	/**
-	 * Package theme URL.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
 	private $_package_theme_url;
-	
-	/**
-	 * Package version.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
 	private $_package_version;
-	
-	/**
-	 * The site ID.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
 	private $_site_id;
 	
 	

@@ -12,40 +12,9 @@ require_once PATH_THIRD .'tweedee/models/tweedee_model' .EXT;
 
 class Test_tweedee_model extends Testee_unit_test_case {
 	
-	/* --------------------------------------------------------------
-	 * PRIVATE PROPERTIES
-	 * ------------------------------------------------------------ */
-	
-	/**
-	 * Package name.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
 	private $_package_name;
-	
-	/**
-	 * Package version.
-	 *
-	 * @access	private
-	 * @var		string
-	 */
 	private $_package_version;
-	
-	/**
-	 * Site ID.
-	 *
-	 * @access	private
-	 * @var		int
-	 */
 	private $_site_id;
-	
-	/**
-	 * The test subject.
-	 *
-	 * @access	private
-	 * @var		object
-	 */
 	private $_subject;
 	
 	
