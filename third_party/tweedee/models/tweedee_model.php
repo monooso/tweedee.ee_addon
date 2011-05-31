@@ -9,6 +9,8 @@
  * @version 		0.1.0
  */
 
+require_once PATH_THIRD .'tweedee/classes/tweedee_criterion' .EXT;
+
 class Tweedee_model extends CI_Model {
 	
 	private $_ee;
@@ -205,7 +207,7 @@ class Tweedee_model extends CI_Model {
 	 */
 	public function load_search_criteria()
 	{
-		$db_result = $this->_ee->db->select('criterion_id, site_id, criterion_type, criterion_value')
+		$db_result = $this->_ee->db->select('criterion_id, criterion_type, criterion_value')
 			->get_where('tweedee_search_criteria', array('site_id' => $this->get_site_id()));
 
 		$criteria = array();
@@ -217,10 +219,7 @@ class Tweedee_model extends CI_Model {
 
 		foreach ($db_result->result_array() AS $db_row)
 		{
-			$db_row['criterion_id'] = intval($db_row['criterion_id']);
-			$db_row['site_id']		= intval($db_row['site_id']);
-
-			$criteria[] = $db_row;
+            $criteria[] = new Tweedee_criterion($db_row);
 		}
 
 		return $criteria;
