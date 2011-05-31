@@ -62,6 +62,23 @@ class Test_tweedee_criterion extends Testee_unit_test_case {
     }
 
 
+    public function test__get_all_criterion_types__success()
+    {
+        $expected_result = array(
+            Tweedee_criterion::TYPE_AND,
+            Tweedee_criterion::TYPE_FROM,
+            Tweedee_criterion::TYPE_HASHTAG,
+            Tweedee_criterion::TYPE_NOT,
+            Tweedee_criterion::TYPE_OR,
+            Tweedee_criterion::TYPE_PHRASE,
+            Tweedee_criterion::TYPE_REFERENCING,
+            Tweedee_criterion::TYPE_TO
+        );
+
+        $this->assertIdentical($expected_result, Tweedee_criterion::get_all_criterion_types());
+    }
+
+
     public function test__set_criterion_type__valid_types()
     {
         $this->assertIdentical(Tweedee_criterion::TYPE_AND, $this->_subject->set_criterion_type(Tweedee_criterion::TYPE_AND));

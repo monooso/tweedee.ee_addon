@@ -29,6 +29,21 @@ class Tweedee_criterion {
      * ------------------------------------------------------------ */
     
     /**
+     * Returns an array of valid criterion types.
+     *
+     * @access  public
+     * @return  array
+     */
+    public static function get_all_criterion_types()
+    {
+        return array(
+            self::TYPE_AND, self::TYPE_FROM, self::TYPE_HASHTAG, self::TYPE_NOT,
+            self::TYPE_OR, self::TYPE_PHRASE, self::TYPE_REFERENCING, self::TYPE_TO
+        ); 
+    }
+
+    
+    /**
      * Determines whether the supplied string is a valid criterion type.
      *
      * @access  public
@@ -37,9 +52,7 @@ class Tweedee_criterion {
      */
     public static function is_valid_criterion_type($criterion_type)
     {
-        return in_array($criterion_type, array(
-            self::TYPE_AND, self::TYPE_FROM, self::TYPE_HASHTAG, self::TYPE_NOT,
-            self::TYPE_OR, self::TYPE_PHRASE, self::TYPE_REFERENCING, self::TYPE_TO));
+        return in_array($criterion_type, self::get_all_criterion_types());
     }
 
 
