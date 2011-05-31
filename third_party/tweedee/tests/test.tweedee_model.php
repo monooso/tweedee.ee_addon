@@ -24,7 +24,7 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	 * ------------------------------------------------------------ */
 	
 	/**
-	 * Constructor.
+     * "Set up" method, called before each test.
 	 *
 	 * @access	public
 	 * @return	void
