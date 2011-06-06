@@ -33,7 +33,7 @@ class Test_tweedee_model extends Testee_unit_test_case {
 	{
 		parent::setUp();
 		
-		// Dummy package name and version.
+        $this->_base_search_url = 'http://example.com?search=';
 		$this->_package_name 	= 'Example_package';
 		$this->_package_version	= '1.0.0';
 		
@@ -42,11 +42,76 @@ class Test_tweedee_model extends Testee_unit_test_case {
 		$this->_ee->config->setReturnValue('item', $this->_site_id, array('site_id'));
 		
 		// The test subject.
-		$this->_subject = new Tweedee_model($this->_package_name, $this->_package_version);
+		$this->_subject = new Tweedee_model($this->_package_name, $this->_package_version, $this->_base_search_url);
 	}
+
+
+    public function test__build_search_url__success()
+    {
+        $criteria = array(
+            new Tweedee_criterion(array(
+                'criterion_type'    => Tweedee_criterion::TYPE_FROM,
+                'criterion_value'   => 'monooso'
+            )),
+            new Tweedee_criterion(array(
+                'criterion_type'    => Tweedee_criterion::TYPE_TO,
+                'criterion_value'   => 'kennymeyers'
+            )),
+            new Tweedee_criterion(array(
+                'criterion_type'    => Tweedee_criterion::TYPE_HASHTAG,
+                'criterion_value'   => 'vanillabear'
+            ))
+        );
+
+        $expected_result = $this->_base_search_url;
+        $expected_result .= urlencode('from:monooso') .'&';
+        $expected_result .= urlencode('to:kennymeyers') .'&';
+        $expected_result .= urlencode('#') .'vanillabear';
+    
+        $this->assertIdentical($expected_result, $this->_subject->build_search_url($criteria));
+    }
+
+
+    public function test__build_search_url__invalid_criterion()
+    {
+        $criteria = array(
+            new Tweedee_criterion(array(
+                'criterion_type'    => Tweedee_criterion::TYPE_FROM,
+                'criterion_value'   => 'monooso'
+            )),
+            new StdClass()
+        );
+
+        // Expecting an exception.
+        $message = 'Oh noes!';
+        $this->_ee->lang->setReturnValue('line', $message);
+        $this->expectException(new Exception($message));
+    
+        $this->_subject->build_search_url($criteria);
+    }
+
+
+    public function test__build_search_url__unpopulated_criterion()
+    {
+        $criteria = array(new Tweedee_criterion(array()));
+
+        // Expecting an exception.
+        $message = 'Quel désastre!';
+        $this->_ee->lang->setReturnValue('line', $message);
+        $this->expectException(new Exception($message));
+
+        $this->_subject->build_search_url($criteria);
+    }
+
+
+    public function test__build_search_url__no_criteria()
+    {
+        $criteria = array();
+        $this->assertIdentical('', $this->_subject->build_search_url($criteria));
+    }
 	
 	
-	public function test__constructor__package_name_and_version()
+	public function test__constructor__test_arguments()
 	{
 		// Dummy values.
 		$package_name 		= 'Example_package';
@@ -64,9 +129,9 @@ class Test_tweedee_model extends Testee_unit_test_case {
         $input = $this->_ee->input;
 
         $search_criteria = array(
-            array('type' => Tweedee_criterion::TYPE_FROM, 'value' => 'monooso'),
-            array('type' => Tweedee_criterion::TYPE_TO, 'value' => 'mrw'),
-            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+            array('criterion_type' => Tweedee_criterion::TYPE_FROM, 'criterion_value' => 'monooso'),
+            array('criterion_type' => Tweedee_criterion::TYPE_TO, 'criterion_value' => 'mrw'),
+            array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey')
         );
 
         $input->expectOnce('post', array('search_criteria', array()));
@@ -94,9 +159,9 @@ class Test_tweedee_model extends Testee_unit_test_case {
         $input = $this->_ee->input;
 
         $search_criteria = array(
-            array('type' => '', 'value' => 'monooso'),
-            array('type' => Tweedee_criterion::TYPE_TO, 'value' => 'mrw'),
-            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+            array('criterion_type' => '', 'criterion_value' => 'monooso'),
+            array('criterion_type' => Tweedee_criterion::TYPE_TO, 'criterion_value' => 'mrw'),
+            array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey')
         );
 
         $input->expectOnce('post', array('search_criteria', array()));
@@ -122,9 +187,9 @@ class Test_tweedee_model extends Testee_unit_test_case {
         $input = $this->_ee->input;
 
         $search_criteria = array(
-            array('type' => Tweedee_criterion::TYPE_FROM, 'value' => 'monooso'),
-            array('type' => Tweedee_criterion::TYPE_TO, 'value' => ''),
-            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+            array('criterion_type' => Tweedee_criterion::TYPE_FROM, 'criterion_value' => 'monooso'),
+            array('criterion_type' => Tweedee_criterion::TYPE_TO, 'criterion_value' => ''),
+            array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey')
         );
 
         $input->expectOnce('post', array('search_criteria', array()));
@@ -150,9 +215,9 @@ class Test_tweedee_model extends Testee_unit_test_case {
         $input = $this->_ee->input;
 
         $search_criteria = array(
-            array('type' => Tweedee_criterion::TYPE_FROM, 'value' => 'monooso'),
-            array('type' => 'invalid', 'value' => 'mrw'),
-            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+            array('criterion_type' => Tweedee_criterion::TYPE_FROM, 'criterion_value' => 'monooso'),
+            array('criterion_type' => 'invalid', 'criterion_value' => 'mrw'),
+            array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey')
         );
 
         $input->expectOnce('post', array('search_criteria', array()));

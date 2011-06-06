@@ -240,6 +240,20 @@ class Test_tweedee_criterion extends Testee_unit_test_case {
         $this->assertIdentical($expected_result, $subject->to_search_string());
     }
 
+
+    public function test__to_search_string__missing_type()
+    {
+        $subject = new Tweedee_criterion(array('criterion_value' => 'artichokes'));
+        $this->assertIdentical('', $subject->to_search_string());
+    }
+
+
+    public function test__to_search_string__missing_value()
+    {
+        $subject = new Tweedee_criterion(array('criterion_type' => Tweedee_criterion::TYPE_TO));
+        $this->assertIdentical('', $subject->to_search_string());
+    }
+
 }
 
 /* End of file      : test.tweedee_criterion.php */

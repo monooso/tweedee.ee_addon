@@ -39,6 +39,68 @@
     width               : 97%;
 }
 
+
+/* =paragraphs
+ * ------------------------------------------------------------ */
+#tweedee p {
+    margin-bottom       : 10px;
+}
+
+
+/* =tweets
+ * ------------------------------------------------------------ */
+#tweedee .tweet_content p {
+    margin-bottom       : 10px;
+}
+
+#tweedee .byline {
+    color               : rgb(153, 153, 153);
+    font-size           : 90%;
+    margin-bottom       : 0;
+}
+
+/* Tweet status */
+#tweedee .tweet_status .btn {
+    -webkit-transition  : all .2s ease;
+    background          : rgb(204, 204, 204);
+    border-radius       : 2px;
+    color               : rgb(255, 255, 255);
+    cursor              : pointer;
+    font-size           : 11px;
+    font-weight         : bold;
+    padding             : 10px 15px;
+    text-transform      : uppercase;
+}
+
+#tweedee .tweet_status .btn:hover {
+    background-color    : rgb(51, 153, 51);
+    box-shadow          : 0 0 5px rgba(0, 0, 0, 0.35);
+    text-decoration     : none;
+}
+
+#tweedee .tweet_publish strong {
+    display             : block;
+}
+
+#tweedee .tweet_publish a {
+    color               : rgb(153, 153, 153);
+    font-size           : 90%;
+}
+
+#tweedee .tweet_unpublish {
+    display             : none;
+}
+
+/* Published tweets */
+#tweedee .tweet_published .tweet_publish {
+    display             : none;
+}
+
+#tweedee .tweet_published .tweet_unpublish {
+    display             : block;
+}
+
+
 } /* @media screen */
 
 /* End of file		: cp.css */
