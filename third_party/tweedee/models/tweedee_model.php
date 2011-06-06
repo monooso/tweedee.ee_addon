@@ -6,7 +6,7 @@
  * @author			Stephen Lewis (http://github.com/experience/)
  * @copyright		Experience Internet
  * @package			Tweedee
- * @version 		0.1.0
+ * @version 		0.2.0
  */
 
 require_once PATH_THIRD .'tweedee/classes/tweedee_criterion' .EXT;
@@ -43,7 +43,7 @@ class Tweedee_model extends CI_Model {
         $this->_base_search_url = $base_search_url ? $base_search_url : 'http://search.twitter.com/search.json?q=';
 		$this->_package_name	= $package_name ? $package_name : 'tweedee';
 		$this->_package_title	= 'Tweedee';
-		$this->_package_version	= $package_version ? $package_version : '0.1.0';
+		$this->_package_version	= $package_version ? $package_version : '0.2.0';
 	}
 
 
