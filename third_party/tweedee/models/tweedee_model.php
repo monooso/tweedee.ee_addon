@@ -13,6 +13,7 @@ require_once PATH_THIRD .'tweedee/classes/tweedee_criterion' .EXT;
 
 class Tweedee_model extends CI_Model {
 	
+    private $_base_search_url;
 	private $_ee;
 	private $_module_base_url;
 	private $_package_name;
@@ -31,18 +32,56 @@ class Tweedee_model extends CI_Model {
 	 * @access	public
 	 * @param 	string		$package_name		The package name. Used during testing.
 	 * @param	string		$package_version	The package version. Used during testing.
+     * @param   string      $base_search_url    The base search URL. Used during testing.
 	 * @return	void
 	 */
-	public function __construct($package_name = '', $package_version = '')
+	public function __construct($package_name = '', $package_version = '', $base_search_url = '')
 	{
 		parent::__construct();
 
 		$this->_ee 				=& get_instance();
+        $this->_base_search_url = $base_search_url ? $base_search_url : 'http://search.twitter.com/search.json?q=';
 		$this->_package_name	= $package_name ? $package_name : 'tweedee';
 		$this->_package_title	= 'Tweedee';
 		$this->_package_version	= $package_version ? $package_version : '0.1.0';
 	}
 
+
+    /**
+     * Builds the Twitter search URL.
+     *
+     * @access  public
+     * @param   array       $criteria       An array of Tweedee_criterion objects.
+     * @return  string
+     */
+    public function build_search_url(Array $criteria = array())
+    {
+        // Get out early.
+        if ( ! $criteria)
+        {
+            return '';
+        }
+
+        $url_criteria = array();
+        foreach ($criteria AS $criterion)
+        {
+            // This really should never happen.
+            if ( ! $criterion instanceof Tweedee_criterion)
+            {
+                throw new Exception($this->_ee->lang->line('exception__invalid_search_criterion_type'));
+            }
+
+            // This is similarly exceptional.
+            if ( ! $criterion->to_search_string())
+            {
+                throw new Exception($this->_ee->lang->line('exception__empty_search_criterion_string'));
+            }
+
+            $url_criteria[] = $criterion->to_search_string();
+        }
+
+        return $this->_base_search_url .implode('&', $url_criteria);
+    }
 
     /**
      * Returns the 'base' query string for all module URLs.

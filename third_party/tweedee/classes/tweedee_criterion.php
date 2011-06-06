@@ -189,12 +189,19 @@ class Tweedee_criterion {
      */
     public function to_search_string()
     {
+        // Get out early.
+        if ( ! $type = $this->get_criterion_type()
+           OR ! $value = $this->get_criterion_value())
+        {
+            return '';
+        }
+
         $delimiter  = '+';
         $prefix     = '';
         $suffix     = '';
-        $value      = urlencode($this->get_criterion_value());
+        $value      = urlencode($value);
 
-        switch ($this->get_criterion_type())
+        switch ($type)
         {
             case self::TYPE_FROM:
                 $prefix = urlencode('from:');
