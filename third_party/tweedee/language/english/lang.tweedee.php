@@ -43,6 +43,12 @@ $lang = array(
 'thd_search_criterion_type'		=> 'Criterion Type',
 'thd_search_criterion_value'	=> 'Criterion Value',
 
+/* --------------------------------------------------------------
+ * EXCEPTIONS
+ * ------------------------------------------------------------ */
+'exception__empty_search_criterion_string'  => 'One or more search criteria have not been set correctly.',
+'exception__invalid_search_criterion_type'  => 'Invalid search criterion type.',
+
 // All done.
 '' => ''
 	
