@@ -64,9 +64,9 @@ class Test_tweedee_model extends Testee_unit_test_case {
         $input = $this->_ee->input;
 
         $search_criteria = array(
-            array('type' => Tweedee_criterion::TYPE_FROM, 'value' => 'monooso'),
-            array('type' => Tweedee_criterion::TYPE_TO, 'value' => 'mrw'),
-            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+            array('criterion_type' => Tweedee_criterion::TYPE_FROM, 'criterion_value' => 'monooso'),
+            array('criterion_type' => Tweedee_criterion::TYPE_TO, 'criterion_value' => 'mrw'),
+            array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey')
         );
 
         $input->expectOnce('post', array('search_criteria', array()));
@@ -94,9 +94,9 @@ class Test_tweedee_model extends Testee_unit_test_case {
         $input = $this->_ee->input;
 
         $search_criteria = array(
-            array('type' => '', 'value' => 'monooso'),
-            array('type' => Tweedee_criterion::TYPE_TO, 'value' => 'mrw'),
-            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+            array('criterion_type' => '', 'criterion_value' => 'monooso'),
+            array('criterion_type' => Tweedee_criterion::TYPE_TO, 'criterion_value' => 'mrw'),
+            array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey')
         );
 
         $input->expectOnce('post', array('search_criteria', array()));
@@ -122,9 +122,9 @@ class Test_tweedee_model extends Testee_unit_test_case {
         $input = $this->_ee->input;
 
         $search_criteria = array(
-            array('type' => Tweedee_criterion::TYPE_FROM, 'value' => 'monooso'),
-            array('type' => Tweedee_criterion::TYPE_TO, 'value' => ''),
-            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+            array('criterion_type' => Tweedee_criterion::TYPE_FROM, 'criterion_value' => 'monooso'),
+            array('criterion_type' => Tweedee_criterion::TYPE_TO, 'criterion_value' => ''),
+            array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey')
         );
 
         $input->expectOnce('post', array('search_criteria', array()));
@@ -150,9 +150,9 @@ class Test_tweedee_model extends Testee_unit_test_case {
         $input = $this->_ee->input;
 
         $search_criteria = array(
-            array('type' => Tweedee_criterion::TYPE_FROM, 'value' => 'monooso'),
-            array('type' => 'invalid', 'value' => 'mrw'),
-            array('type' => Tweedee_criterion::TYPE_PHRASE, 'value' => 'oy vey')
+            array('criterion_type' => Tweedee_criterion::TYPE_FROM, 'criterion_value' => 'monooso'),
+            array('criterion_type' => 'invalid', 'criterion_value' => 'mrw'),
+            array('criterion_type' => Tweedee_criterion::TYPE_PHRASE, 'criterion_value' => 'oy vey')
         );
 
         $input->expectOnce('post', array('search_criteria', array()));

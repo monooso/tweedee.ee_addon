@@ -98,7 +98,12 @@ class Tweedee_mcp {
 	 */
 	public function search_results()
 	{
-		return '<p>Search results.</p>';
+		$view_vars = array(
+            'cp_page_title'     => $this->_ee->lang->line('hd_search_results'),
+			'theme_url'			=> $this->_theme_url
+		);
+
+		return $this->_ee->load->view('search_results', $view_vars, TRUE);
 	}
 
 
